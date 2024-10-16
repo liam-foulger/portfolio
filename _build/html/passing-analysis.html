@@ -1,0 +1,2086 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sample Project: Analyzing Soccer (Football) Progressive Passing Data &#8212; Portfolio</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'passing-analysis';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Liam Foulger’s portfolio!" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Portfolio - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Portfolio - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Liam Foulger’s portfolio!
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Sample Project: Analyzing Soccer (Football) Progressive Passing Data</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/liam-foulger/Portfolio" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/liam-foulger/Portfolio/issues/new?title=Issue%20on%20page%20%2Fpassing-analysis.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/passing-analysis.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Sample Project: Analyzing Soccer (Football) Progressive Passing Data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-reading-warning-contains-discussion-of-soccer-specific-techniques">Optional Reading:  Warning! Contains discussion of soccer-specific techniques</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methodology">Methodology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-transform-and-load-the-data">Extract, transform, and load the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brief-summary">Brief Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-some-limitations-future-directions">A note on some limitations &amp; future directions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="sample-project-analyzing-soccer-football-progressive-passing-data">
+<h1>Sample Project: Analyzing Soccer (Football) Progressive Passing Data<a class="headerlink" href="#sample-project-analyzing-soccer-football-progressive-passing-data" title="Link to this heading">#</a></h1>
+<p>Author: Liam Foulger, MSc</p>
+<p>Last Updated: October 15, 2024</p>
+<section id="intro">
+<h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">#</a></h2>
+<p>Welcome to my portfolio/sample project. The idea behind this is to provide a short sample of my skills as a data analyst while pursuing something interesting to me. Hope you enjoy!</p>
+</section>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
+<p>As a lifelong soccer fan, former varsity soccer player, and long-time season ticket holder for my local team (Vancouver Whitecaps FC), I decided to look at some soccer data. Specifically, I am interested in how player characteristics influence how a team is able to progress the ball up the field (i.e., closer to the opponent’s goal), where they can attempt to score. Excluding the goalkeeper, teams generally progress the ball upfield starting from the center backs (<strong>Image 1</strong>). I am interested in determining if the foot (left or right) that is used to make a pass has an influence on how “progressive” the pass is.</p>
+<p><img alt="Image 1" src="_images/soccer-formation-draw.png" /></p>
+<p><strong>Image 1.</strong> Example soccer formation, with the two center back positions (LCB: Left Center Back, RCB: Right Center Back) circled. Note that some formations have three center backs (Left Center Back, Center Back, and Right Center Back).</p>
+<br>
+<section id="optional-reading-warning-contains-discussion-of-soccer-specific-techniques">
+<h3>Optional Reading:  Warning! Contains discussion of soccer-specific techniques<a class="headerlink" href="#optional-reading-warning-contains-discussion-of-soccer-specific-techniques" title="Link to this heading">#</a></h3>
+<p>As a left-sided center back for most of my youth/varsity playing days, I have always been of the opinion that having a left footed player at left center back poses a significant advantage when playing the ball out from the back. I think this is even more important when playing with three central defenders since this results in the two wide center backs receiving the ball in even wider positions. Having watched my Vancouver Whitecaps play with a three-at-the-back formation for the past few years has really solidified this belief. For example, when a right footed right center back receives the ball from the goalkeeper or center back, they prefer to receive it with their right foot. This allows them to open up their body to look forwards to make a pass while still being able to turn back towards their goal if under pressure. Alternatively, a right footed left center back will still generally prefer to receive the ball with (the inside of) their right foot, meaning that they receive the ball facing the inside of the field. This results in them facing away from the very wide left channel of the field, effectively cutting off their ability to quickly pass to that area of the pitch. Additionally, when right footed left center backs are pressured from the middle of the field (i.e., where the strikers generally press from), it is more difficult to pass with their right foot and will often (i.e., should) shift the ball to their weaker left foot. However, I acknowledge that these are just my personal opinions, which is why I wanted to look at some actual data.
+<br></p>
+<p>Note: I also believe these same advantages apply to wingbacks in a 3-5-2 formation (which the Whitecaps play), when it comes to building the play in the defensive and middle 1/3rds of the field. Alas, this is not the focus of this analysis so I will not discuss this further.</p>
+</section>
+</section>
+<section id="methodology">
+<h2>Methodology<a class="headerlink" href="#methodology" title="Link to this heading">#</a></h2>
+<p>Finding detailed match data was probably one of the more difficult aspects of this project. While there are lots of great websites with summary match statistics (e.g., goals scored, shots taken, fouls),  I was interested in pass-specific data, so I needed detailed information about every pass that occured in a game. Luckily, Statsbomb has some freely available data I was able to use (<a class="github reference external" href="https://github.com/statsbomb/open-data">statsbomb/open-data</a>). The inspiration for this project came from watching my local team (Vancouver Whitecaps FC), who play in Major League Soccer (MLS). Unfortunately, the MLS data was quite limited, so I instead chose to use the most complete men’s league data I could find. This turned out to be the 2015/2016 English Premier League, which had data from every game that season (amazing!). While this is a different league than I was initially interested in looking at and a bit out of date, it is one of the best leagues in the world and I believe these results will translate to other leagues.
+<br>
+<br>
+I chose to use Python for this project for the following reasons:</p>
+<ol class="arabic simple">
+<li><p>The data is in .json files, which Python has an easy-to-use package for reading directly from URLs.</p></li>
+<li><p>The data contains nested information in the tables, which pandas is able to easily flatten to create easy-to-use dataframes.</p></li>
+<li><p>Python has some great visualization packages (seaborn and matplotlib) and I can use jupyter notebook to share it nicely.</p></li>
+<li><p>Python also has some stats packages in case I decide to do some stats.</p></li>
+</ol>
+<br>
+Okay great, let's start looking at some data!</section>
+<section id="extract-transform-and-load-the-data">
+<h2>Extract, transform, and load the data<a class="headerlink" href="#extract-transform-and-load-the-data" title="Link to this heading">#</a></h2>
+<p>First, let’s get the data. The data is located at the following GitHub: <a class="github reference external" href="https://github.com/statsbomb/open-data">statsbomb/open-data</a>. The data is rather large (11.7 GB) and I am only interested in a small portion of the data, so I will directly load it into Jupyter rather than download the data.</p>
+<p>There are a couple layers to the data, so let’s walk through how I got the data I am interested in:</p>
+<p>First, we need to find the competetion ID and season ID(s; some competetions have multiple seasons of data). A single .json file has this information, called “competitions.json”. Let’s load this data directly from the github repo, save the .json info, and then convert to a Pandas dataframe.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">math</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is the URL for the &quot;competitions.json&quot; file</span>
+<span class="n">comp_url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/statsbomb/open-data/refs/heads/master/data/competitions.json&quot;</span>
+
+<span class="c1"># Fetch the content</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">comp_url</span><span class="p">)</span>
+
+<span class="c1"># Load JSON content and save as pandas dataframe</span>
+<span class="n">comp_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+
+<span class="c1"># view first 5 rows of the dataframe</span>
+<span class="n">comp_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>competition_id</th>
+      <th>season_id</th>
+      <th>country_name</th>
+      <th>competition_name</th>
+      <th>competition_gender</th>
+      <th>competition_youth</th>
+      <th>competition_international</th>
+      <th>season_name</th>
+      <th>match_updated</th>
+      <th>match_updated_360</th>
+      <th>match_available_360</th>
+      <th>match_available</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9</td>
+      <td>281</td>
+      <td>Germany</td>
+      <td>1. Bundesliga</td>
+      <td>male</td>
+      <td>False</td>
+      <td>False</td>
+      <td>2023/2024</td>
+      <td>2024-07-15T14:15:54.671676</td>
+      <td>2024-07-15T14:17:00.877356</td>
+      <td>2024-07-15T14:17:00.877356</td>
+      <td>2024-07-15T14:15:54.671676</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9</td>
+      <td>27</td>
+      <td>Germany</td>
+      <td>1. Bundesliga</td>
+      <td>male</td>
+      <td>False</td>
+      <td>False</td>
+      <td>2015/2016</td>
+      <td>2024-05-19T11:11:14.192381</td>
+      <td>None</td>
+      <td>None</td>
+      <td>2024-05-19T11:11:14.192381</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1267</td>
+      <td>107</td>
+      <td>Africa</td>
+      <td>African Cup of Nations</td>
+      <td>male</td>
+      <td>False</td>
+      <td>True</td>
+      <td>2023</td>
+      <td>2024-06-13T07:51:02.452825</td>
+      <td>None</td>
+      <td>None</td>
+      <td>2024-06-13T07:51:02.452825</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>16</td>
+      <td>4</td>
+      <td>Europe</td>
+      <td>Champions League</td>
+      <td>male</td>
+      <td>False</td>
+      <td>False</td>
+      <td>2018/2019</td>
+      <td>2024-06-12T07:44:38.559714</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>None</td>
+      <td>2024-06-12T07:44:38.559714</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>16</td>
+      <td>1</td>
+      <td>Europe</td>
+      <td>Champions League</td>
+      <td>male</td>
+      <td>False</td>
+      <td>False</td>
+      <td>2017/2018</td>
+      <td>2024-02-13T02:35:28.134882</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>None</td>
+      <td>2024-02-13T02:35:28.134882</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Above you can see the first few rows of data in the newly created “comp_data” dataframe, which contains information about all of the competitions (i.e., leagues) in the dataset. The 2015/2016 Premier League season has the most complete dataset, so we are going to use that. Let’s take a look at that row in the dataframe and then save the competition ID and season ID.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the competition(s) that correspond with the name and season desired</span>
+<span class="n">competitions</span> <span class="o">=</span> <span class="n">comp_data</span><span class="p">[(</span><span class="n">comp_data</span><span class="p">[</span><span class="s2">&quot;competition_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Premier League&quot;</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="n">comp_data</span><span class="p">[</span><span class="s2">&quot;season_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;2015/2016&quot;</span><span class="p">)]</span>
+
+<span class="c1"># save the competition ID and season ID</span>
+<span class="n">comp_id</span> <span class="o">=</span> <span class="n">competitions</span><span class="p">[</span><span class="s2">&quot;competition_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">season_id</span> <span class="o">=</span> <span class="n">competitions</span><span class="p">[</span><span class="s2">&quot;season_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">competitions</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>competition_id</th>
+      <th>season_id</th>
+      <th>country_name</th>
+      <th>competition_name</th>
+      <th>competition_gender</th>
+      <th>competition_youth</th>
+      <th>competition_international</th>
+      <th>season_name</th>
+      <th>match_updated</th>
+      <th>match_updated_360</th>
+      <th>match_available_360</th>
+      <th>match_available</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>64</th>
+      <td>2</td>
+      <td>27</td>
+      <td>England</td>
+      <td>Premier League</td>
+      <td>male</td>
+      <td>False</td>
+      <td>False</td>
+      <td>2015/2016</td>
+      <td>2024-06-12T07:43:56.243851</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>None</td>
+      <td>2024-06-12T07:43:56.243851</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Great! Now that we have the competition and season IDs, we can load the match (game) information. The match data is located in the following subpath in the github: “…/data/matches/[competition_id]/[season_id].json”. So using the information above, let’s load the match table for the 2015/2016 Premier League season. (Note: while I could have just statically referenced this info, I chose to allow for dynamic referencing in case I want to look at a different year or competition in the future).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define url for matches json file</span>
+<span class="n">matches_url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/statsbomb/open-data/refs/heads/master/data/matches/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">comp_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">season_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+
+<span class="c1"># Fetch the content</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">matches_url</span><span class="p">)</span>
+
+<span class="c1"># Load JSON content and save as pandas dataframe</span>
+<span class="n">matches_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+
+<span class="c1"># show first and last few rows of the data frame</span>
+<span class="n">matches_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>match_id</th>
+      <th>match_date</th>
+      <th>kick_off</th>
+      <th>home_score</th>
+      <th>away_score</th>
+      <th>match_status</th>
+      <th>match_status_360</th>
+      <th>last_updated</th>
+      <th>last_updated_360</th>
+      <th>match_week</th>
+      <th>...</th>
+      <th>competition_stage.id</th>
+      <th>competition_stage.name</th>
+      <th>stadium.id</th>
+      <th>stadium.name</th>
+      <th>stadium.country.id</th>
+      <th>stadium.country.name</th>
+      <th>referee.id</th>
+      <th>referee.name</th>
+      <th>referee.country.id</th>
+      <th>referee.country.name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3754058</td>
+      <td>2016-01-02</td>
+      <td>16:00:00.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>available</td>
+      <td>processing</td>
+      <td>2021-10-29T23:44:19.940296</td>
+      <td>2021-06-12T16:17:31.694</td>
+      <td>20</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>20</td>
+      <td>King Power Stadium</td>
+      <td>68</td>
+      <td>England</td>
+      <td>5</td>
+      <td>Andre Marriner</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3754245</td>
+      <td>2015-10-17</td>
+      <td>16:00:00.000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2022-12-01T13:09:17.044015</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>9</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>33</td>
+      <td>The Hawthorns</td>
+      <td>68</td>
+      <td>England</td>
+      <td>4</td>
+      <td>Martin Atkinson</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3754136</td>
+      <td>2015-12-19</td>
+      <td>18:30:00.000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2020-11-12T23:48:19.757269</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>17</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>4674</td>
+      <td>St. James'' Park</td>
+      <td>68</td>
+      <td>England</td>
+      <td>4</td>
+      <td>Martin Atkinson</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3754037</td>
+      <td>2016-04-30</td>
+      <td>16:00:00.000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>available</td>
+      <td>processing</td>
+      <td>2021-07-07T17:59:57.456</td>
+      <td>2021-06-12T16:17:31.694</td>
+      <td>36</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>12</td>
+      <td>Goodison Park</td>
+      <td>68</td>
+      <td>England</td>
+      <td>7</td>
+      <td>Neil Swarbrick</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3754039</td>
+      <td>2016-02-13</td>
+      <td>16:00:00.000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>available</td>
+      <td>processing</td>
+      <td>2021-07-25T18:09:51.386</td>
+      <td>2021-06-12T16:17:31.694</td>
+      <td>26</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>37</td>
+      <td>Selhurst Park</td>
+      <td>68</td>
+      <td>England</td>
+      <td>9</td>
+      <td>Robert Madley</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>375</th>
+      <td>3754020</td>
+      <td>2015-08-17</td>
+      <td>21:00:00.000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2022-07-08T21:26:42.829047</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>2</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>6</td>
+      <td>Anfield</td>
+      <td>68</td>
+      <td>England</td>
+      <td>2</td>
+      <td>Craig Pawson</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>376</th>
+      <td>3754267</td>
+      <td>2015-08-15</td>
+      <td>16:00:00.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2020-07-29T05:00</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>2</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>4589</td>
+      <td>Vicarage Road</td>
+      <td>68</td>
+      <td>England</td>
+      <td>17</td>
+      <td>Paul Tierney</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>377</th>
+      <td>3754141</td>
+      <td>2015-08-09</td>
+      <td>14:30:00.000</td>
+      <td>0</td>
+      <td>2</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2020-08-24T23:30:31.273938</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>3</td>
+      <td>Emirates Stadium</td>
+      <td>68</td>
+      <td>England</td>
+      <td>4</td>
+      <td>Martin Atkinson</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>378</th>
+      <td>3754128</td>
+      <td>2015-08-08</td>
+      <td>16:00:00.000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2022-07-08T20:29:32.062770</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>71</td>
+      <td>Vitality Stadium</td>
+      <td>68</td>
+      <td>England</td>
+      <td>728</td>
+      <td>Mark Clattenburg</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+    <tr>
+      <th>379</th>
+      <td>3754078</td>
+      <td>2015-08-08</td>
+      <td>18:30:00.000</td>
+      <td>2</td>
+      <td>2</td>
+      <td>available</td>
+      <td>scheduled</td>
+      <td>2022-07-08T20:50:15.565471</td>
+      <td>2021-06-13T16:17:31.694</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>Regular Season</td>
+      <td>10</td>
+      <td>Stamford Bridge</td>
+      <td>68</td>
+      <td>England</td>
+      <td>1</td>
+      <td>Michael Oliver</td>
+      <td>68</td>
+      <td>England</td>
+    </tr>
+  </tbody>
+</table>
+<p>380 rows × 42 columns</p>
+</div></div></div>
+</div>
+<p>Now we have a list of details regarding every match that took place in the 2015/2016 season. This contains general information such as the score, the teams involved, where it took place, and much more. However, we are looking for detailed data about every pass that occurred during the games. To find this, we must load the “event” data. Each event .json file contains information about every shot, pass, tackle, and more that occurred during a single game. The events are named based on the match IDs, which is why we first need to create a list of all match IDs. Let’s now load a single event data to take a look at what is in it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># save the match IDs in a list</span>
+<span class="n">match_ids</span> <span class="o">=</span> <span class="n">matches_data</span><span class="p">[</span><span class="s2">&quot;match_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># select the first match ID</span>
+<span class="n">curr_id</span> <span class="o">=</span> <span class="n">match_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># load the current ID</span>
+<span class="n">event_url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/statsbomb/open-data/refs/heads/master/data/events/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">curr_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+<span class="c1"># Fetch the content</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event_url</span><span class="p">)</span>
+
+<span class="c1"># Load JSON content and save as pandas dataframe</span>
+<span class="n">event_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">event_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">event_json</span><span class="p">,)</span>
+
+<span class="c1"># show first and last few events </span>
+<span class="n">event_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>index</th>
+      <th>period</th>
+      <th>timestamp</th>
+      <th>minute</th>
+      <th>second</th>
+      <th>possession</th>
+      <th>duration</th>
+      <th>type.id</th>
+      <th>type.name</th>
+      <th>...</th>
+      <th>goalkeeper.technique.id</th>
+      <th>goalkeeper.technique.name</th>
+      <th>goalkeeper.body_part.id</th>
+      <th>goalkeeper.body_part.name</th>
+      <th>pass.inswinging</th>
+      <th>foul_committed.penalty</th>
+      <th>foul_won.penalty</th>
+      <th>pass.outswinging</th>
+      <th>miscontrol.aerial_won</th>
+      <th>goalkeeper.punched_out</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9153e9f4-f69c-4e04-8f64-505592e212cd</td>
+      <td>1</td>
+      <td>1</td>
+      <td>00:00:00.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.000000</td>
+      <td>35</td>
+      <td>Starting XI</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3fbcf4e7-94d1-485a-be85-fd26a6af0318</td>
+      <td>2</td>
+      <td>1</td>
+      <td>00:00:00.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.000000</td>
+      <td>35</td>
+      <td>Starting XI</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>06a9a4dc-d9c9-40f6-bd89-437ba7fe682d</td>
+      <td>3</td>
+      <td>1</td>
+      <td>00:00:00.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.000000</td>
+      <td>18</td>
+      <td>Half Start</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>100362ee-9311-4187-bd8a-0201d9db2565</td>
+      <td>4</td>
+      <td>1</td>
+      <td>00:00:00.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.000000</td>
+      <td>18</td>
+      <td>Half Start</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2ca23eea-a984-47e4-8243-8f00880ad1c9</td>
+      <td>5</td>
+      <td>1</td>
+      <td>00:00:01.753</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0.308263</td>
+      <td>30</td>
+      <td>Pass</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3571</th>
+      <td>20baabc3-44a5-4792-8336-60dc513cc0bd</td>
+      <td>3572</td>
+      <td>2</td>
+      <td>00:49:29.281</td>
+      <td>94</td>
+      <td>29</td>
+      <td>192</td>
+      <td>4.656505</td>
+      <td>43</td>
+      <td>Carry</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3572</th>
+      <td>3196324d-cf4d-4d9c-92b7-5b1cac9a5910</td>
+      <td>3573</td>
+      <td>2</td>
+      <td>00:49:33.938</td>
+      <td>94</td>
+      <td>33</td>
+      <td>192</td>
+      <td>0.909625</td>
+      <td>30</td>
+      <td>Pass</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3573</th>
+      <td>3052795e-42ae-4543-b039-c52157c92ce6</td>
+      <td>3574</td>
+      <td>2</td>
+      <td>00:49:34.847</td>
+      <td>94</td>
+      <td>34</td>
+      <td>192</td>
+      <td>NaN</td>
+      <td>42</td>
+      <td>Ball Receipt*</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3574</th>
+      <td>3371e127-bdb0-45d1-84c4-eb86c918af6b</td>
+      <td>3575</td>
+      <td>2</td>
+      <td>00:49:38.689</td>
+      <td>94</td>
+      <td>38</td>
+      <td>192</td>
+      <td>0.000000</td>
+      <td>34</td>
+      <td>Half End</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3575</th>
+      <td>385145e8-fec7-401e-8ad0-55e3e3d1f8ff</td>
+      <td>3576</td>
+      <td>2</td>
+      <td>00:49:38.689</td>
+      <td>94</td>
+      <td>38</td>
+      <td>192</td>
+      <td>0.000000</td>
+      <td>34</td>
+      <td>Half End</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>3576 rows × 115 columns</p>
+</div></div></div>
+</div>
+<p>As you can see, there are a lot of rows (events) in a single file. There are also lots of columns not shown in this preview, so let’s take a look at all of the columns:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">event_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;id&#39;,
+ &#39;index&#39;,
+ &#39;period&#39;,
+ &#39;timestamp&#39;,
+ &#39;minute&#39;,
+ &#39;second&#39;,
+ &#39;possession&#39;,
+ &#39;duration&#39;,
+ &#39;type.id&#39;,
+ &#39;type.name&#39;,
+ &#39;possession_team.id&#39;,
+ &#39;possession_team.name&#39;,
+ &#39;play_pattern.id&#39;,
+ &#39;play_pattern.name&#39;,
+ &#39;team.id&#39;,
+ &#39;team.name&#39;,
+ &#39;tactics.formation&#39;,
+ &#39;tactics.lineup&#39;,
+ &#39;related_events&#39;,
+ &#39;location&#39;,
+ &#39;player.id&#39;,
+ &#39;player.name&#39;,
+ &#39;position.id&#39;,
+ &#39;position.name&#39;,
+ &#39;pass.recipient.id&#39;,
+ &#39;pass.recipient.name&#39;,
+ &#39;pass.length&#39;,
+ &#39;pass.angle&#39;,
+ &#39;pass.height.id&#39;,
+ &#39;pass.height.name&#39;,
+ &#39;pass.end_location&#39;,
+ &#39;pass.type.id&#39;,
+ &#39;pass.type.name&#39;,
+ &#39;pass.body_part.id&#39;,
+ &#39;pass.body_part.name&#39;,
+ &#39;carry.end_location&#39;,
+ &#39;under_pressure&#39;,
+ &#39;pass.switch&#39;,
+ &#39;pass.outcome.id&#39;,
+ &#39;pass.outcome.name&#39;,
+ &#39;duel.outcome.id&#39;,
+ &#39;duel.outcome.name&#39;,
+ &#39;duel.type.id&#39;,
+ &#39;duel.type.name&#39;,
+ &#39;ball_receipt.outcome.id&#39;,
+ &#39;ball_receipt.outcome.name&#39;,
+ &#39;pass.aerial_won&#39;,
+ &#39;counterpress&#39;,
+ &#39;pass.assisted_shot_id&#39;,
+ &#39;pass.shot_assist&#39;,
+ &#39;shot.statsbomb_xg&#39;,
+ &#39;shot.end_location&#39;,
+ &#39;shot.key_pass_id&#39;,
+ &#39;shot.technique.id&#39;,
+ &#39;shot.technique.name&#39;,
+ &#39;shot.body_part.id&#39;,
+ &#39;shot.body_part.name&#39;,
+ &#39;shot.outcome.id&#39;,
+ &#39;shot.outcome.name&#39;,
+ &#39;shot.type.id&#39;,
+ &#39;shot.type.name&#39;,
+ &#39;shot.freeze_frame&#39;,
+ &#39;goalkeeper.end_location&#39;,
+ &#39;goalkeeper.type.id&#39;,
+ &#39;goalkeeper.type.name&#39;,
+ &#39;goalkeeper.position.id&#39;,
+ &#39;goalkeeper.position.name&#39;,
+ &#39;clearance.body_part.id&#39;,
+ &#39;clearance.body_part.name&#39;,
+ &#39;clearance.right_foot&#39;,
+ &#39;off_camera&#39;,
+ &#39;out&#39;,
+ &#39;pass.cross&#39;,
+ &#39;pass.cut_back&#39;,
+ &#39;dribble.outcome.id&#39;,
+ &#39;dribble.outcome.name&#39;,
+ &#39;dribble.overrun&#39;,
+ &#39;dribble.nutmeg&#39;,
+ &#39;clearance.left_foot&#39;,
+ &#39;interception.outcome.id&#39;,
+ &#39;interception.outcome.name&#39;,
+ &#39;foul_committed.advantage&#39;,
+ &#39;foul_won.advantage&#39;,
+ &#39;ball_recovery.recovery_failure&#39;,
+ &#39;foul_won.defensive&#39;,
+ &#39;shot.first_time&#39;,
+ &#39;pass.technique.id&#39;,
+ &#39;pass.technique.name&#39;,
+ &#39;pass.through_ball&#39;,
+ &#39;clearance.head&#39;,
+ &#39;clearance.aerial_won&#39;,
+ &#39;foul_committed.offensive&#39;,
+ &#39;pass.deflected&#39;,
+ &#39;goalkeeper.outcome.id&#39;,
+ &#39;goalkeeper.outcome.name&#39;,
+ &#39;shot.one_on_one&#39;,
+ &#39;foul_committed.card.id&#39;,
+ &#39;foul_committed.card.name&#39;,
+ &#39;shot.aerial_won&#39;,
+ &#39;foul_committed.type.id&#39;,
+ &#39;foul_committed.type.name&#39;,
+ &#39;substitution.outcome.id&#39;,
+ &#39;substitution.outcome.name&#39;,
+ &#39;substitution.replacement.id&#39;,
+ &#39;substitution.replacement.name&#39;,
+ &#39;goalkeeper.technique.id&#39;,
+ &#39;goalkeeper.technique.name&#39;,
+ &#39;goalkeeper.body_part.id&#39;,
+ &#39;goalkeeper.body_part.name&#39;,
+ &#39;pass.inswinging&#39;,
+ &#39;foul_committed.penalty&#39;,
+ &#39;foul_won.penalty&#39;,
+ &#39;pass.outswinging&#39;,
+ &#39;miscontrol.aerial_won&#39;,
+ &#39;goalkeeper.punched_out&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we’ve taken a look at the event data, let’s make a function to extract the necessary data for my analysis. Since I am interested in passing data, let’s get (complete) pass events from the right and left center backs. Since we are interested in whether passes are progressive or not, we need to do some transforming of the data provided. Specifically, all passing data is provided with the angle of the pass (from -pi to pi; see Image 2 for reference), so we can use that to determine whether a pass is progressive or not.</p>
+<p><img alt="Image 2" src="_images/progressive_pass_figure.png" /></p>
+<p><strong>Image 2.</strong> Illustration of the pass angle information provided in the events datafile. For the purpose of this analysis, I have chosen to define a progressive pass as anything that moves the pass forward (green shaded area), even if it is just above sideways.
+<br></p>
+<p>I am also interested in looking at “how progressive” a pass is (i.e., how much distance does the pass move the ball towards to opponent’s goal). To calculate this, we can use the pass angle and pass length in yards (1 yard = ~0.91 meters) to determine how much forward distance the pass gained. For non-progressive passes (as previously defined), we will set this value to 0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getPassData</span><span class="p">(</span><span class="n">match_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get the completed passes from the event data, filtered by:</span>
+<span class="sd">     1) Make sure it was a &quot;pass&quot; event</span>
+<span class="sd">     2) Make sure it was a completed pass (outcome == null)</span>
+<span class="sd">     3) Make sure the body part was the left or right foot (i.e., ignoring headers or other body parts used to make a pass)</span>
+<span class="sd">     4) Make sure it was from the left or right center backs</span>
+<span class="sd">        and then only select the relevant columns</span>
+<span class="sd">        </span>
+<span class="sd">    Also, add new columns to 1) determine whether the pass progressed the ball forward and </span>
+<span class="sd">    2) how far the ball was progressed forward (in yards)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#construct the event file url</span>
+    
+    <span class="n">event_url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/statsbomb/open-data/refs/heads/master/data/events/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">curr_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+    
+    <span class="c1"># Fetch the content </span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event_url</span><span class="p">)</span>
+
+    <span class="c1"># Load JSON content and save as pandas dataframe</span>
+    <span class="n">event_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+    
+    <span class="c1"># filter out only the based on the following:</span>
+    <span class="c1"># 1) Make sure it was a &quot;pass&quot; event</span>
+    <span class="c1"># 2) Make sure it was a completed pass (outcome == null)</span>
+    <span class="c1"># 3) Make sure the body part was the left or right foot (i.e., ignoring headers or other body parts used to make a pass)</span>
+    <span class="c1"># 4) Make sure it was from the left or right center backs</span>
+    <span class="c1"># and then only select the relevant columns</span>
+    <span class="n">pass_data</span> <span class="o">=</span> <span class="n">event_data</span><span class="p">[(</span><span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;type.name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Pass&quot;</span><span class="p">)</span> 
+               <span class="o">&amp;</span> <span class="p">(</span><span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;pass.outcome.id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">())</span>
+               <span class="o">&amp;</span> <span class="p">((</span><span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;pass.body_part.name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Right Foot&quot;</span><span class="p">)</span> <span class="o">|</span>
+                  <span class="p">(</span><span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;pass.body_part.name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Left Foot&quot;</span><span class="p">))</span>
+               <span class="o">&amp;</span> <span class="p">((</span><span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;position.name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Right Center Back&quot;</span><span class="p">)</span> <span class="o">|</span>
+                  <span class="p">(</span><span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;position.name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Left Center Back&quot;</span><span class="p">))][[</span><span class="s2">&quot;position.name&quot;</span><span class="p">,</span><span class="s2">&quot;pass.length&quot;</span><span class="p">,</span><span class="s2">&quot;pass.angle&quot;</span><span class="p">,</span>
+                                                    <span class="s2">&quot;pass.body_part.name&quot;</span><span class="p">]]</span>
+    
+    <span class="c1"># add a new column to determine if the pass was forward (i.e., towards the opponent&#39;s goal)</span>
+    <span class="n">pass_data</span><span class="p">[</span><span class="s2">&quot;is_progressive&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pass_data</span><span class="p">[</span><span class="s2">&quot;pass.angle&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">((</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># add a new column to determine how much forward space was gained from the pass</span>
+    <span class="n">pass_data</span><span class="p">[</span><span class="s2">&quot;distance_progressed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pass_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pass.length&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;pass.angle&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;pass.angle&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;pass.angle&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">pass_data</span>
+
+<span class="c1"># test out function and show some rows of the data frame</span>
+<span class="n">getPassData</span><span class="p">(</span><span class="n">curr_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>position.name</th>
+      <th>pass.length</th>
+      <th>pass.angle</th>
+      <th>pass.body_part.name</th>
+      <th>is_progressive</th>
+      <th>distance_progressed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15</th>
+      <td>Right Center Back</td>
+      <td>15.890248</td>
+      <td>1.064920</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>7.700000</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Right Center Back</td>
+      <td>40.412373</td>
+      <td>-1.546049</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Left Center Back</td>
+      <td>26.122213</td>
+      <td>-0.940311</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>15.400001</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Left Center Back</td>
+      <td>24.782251</td>
+      <td>1.692148</td>
+      <td>Right Foot</td>
+      <td>False</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>Right Center Back</td>
+      <td>16.531485</td>
+      <td>-0.404097</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>15.200000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3421</th>
+      <td>Left Center Back</td>
+      <td>19.250975</td>
+      <td>-2.570880</td>
+      <td>Right Foot</td>
+      <td>False</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>3438</th>
+      <td>Left Center Back</td>
+      <td>13.237824</td>
+      <td>0.470404</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>11.799999</td>
+    </tr>
+    <tr>
+      <th>3529</th>
+      <td>Left Center Back</td>
+      <td>14.505516</td>
+      <td>-1.543217</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>0.400000</td>
+    </tr>
+    <tr>
+      <th>3554</th>
+      <td>Right Center Back</td>
+      <td>21.868927</td>
+      <td>1.111239</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>9.699999</td>
+    </tr>
+    <tr>
+      <th>3572</th>
+      <td>Right Center Back</td>
+      <td>7.280110</td>
+      <td>-0.278300</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>7.000000</td>
+    </tr>
+  </tbody>
+</table>
+<p>134 rows × 6 columns</p>
+</div></div></div>
+</div>
+<p>Great, so we can see that I’ve gotten all the (completed) passes, from the right and left center backs, with all the relevant data including the two columns I’ve added at the end (“is_progressive” = whether the pass moves the ball forward; “distance_progressed” = how far forward the ball is moved). Now we can loop through all of the matches to get a big dataframe with all of the specified passes from the entire season.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create empty list to add data frames to</span>
+<span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># for each match, get the passing data frame (from the function) and add it to the list of passing dataframes</span>
+<span class="c1"># there are a lot of matches to load, so this takes some time.</span>
+<span class="c1"># Some thoughts on how I could speed this up:</span>
+<span class="c1"># - Parallel loops</span>
+<span class="c1"># - reading from the url may make this take longer, so having the data downloaded could speed this up</span>
+<span class="c1"># - numeric arrays might be faster to work with, rather than pandas dataframes, so I could have kept them in arrays until</span>
+<span class="c1">#   the very end when I could convert the single matrix into a dataframe</span>
+<span class="k">for</span> <span class="n">current_id</span> <span class="ow">in</span> <span class="n">match_ids</span><span class="p">:</span> 
+    <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">getPassData</span><span class="p">(</span><span class="n">current_id</span><span class="p">))</span>
+    
+<span class="c1"># now combine all of the dataframes together at once, this is very quick</span>
+<span class="n">passing_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+<span class="n">passing_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>position.name</th>
+      <th>pass.length</th>
+      <th>pass.angle</th>
+      <th>pass.body_part.name</th>
+      <th>is_progressive</th>
+      <th>distance_progressed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Right Center Back</td>
+      <td>15.890248</td>
+      <td>1.064920</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>7.700000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Right Center Back</td>
+      <td>40.412373</td>
+      <td>-1.546049</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Left Center Back</td>
+      <td>26.122213</td>
+      <td>-0.940311</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>15.400001</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Left Center Back</td>
+      <td>24.782251</td>
+      <td>1.692148</td>
+      <td>Right Foot</td>
+      <td>False</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Right Center Back</td>
+      <td>16.531485</td>
+      <td>-0.404097</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>15.200000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>50915</th>
+      <td>Left Center Back</td>
+      <td>19.250975</td>
+      <td>-2.570880</td>
+      <td>Right Foot</td>
+      <td>False</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50916</th>
+      <td>Left Center Back</td>
+      <td>13.237824</td>
+      <td>0.470404</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>11.799999</td>
+    </tr>
+    <tr>
+      <th>50917</th>
+      <td>Left Center Back</td>
+      <td>14.505516</td>
+      <td>-1.543217</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>0.400000</td>
+    </tr>
+    <tr>
+      <th>50918</th>
+      <td>Right Center Back</td>
+      <td>21.868927</td>
+      <td>1.111239</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>9.699999</td>
+    </tr>
+    <tr>
+      <th>50919</th>
+      <td>Right Center Back</td>
+      <td>7.280110</td>
+      <td>-0.278300</td>
+      <td>Right Foot</td>
+      <td>True</td>
+      <td>7.000000</td>
+    </tr>
+  </tbody>
+</table>
+<p>50920 rows × 6 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Link to this heading">#</a></h2>
+<p>Great, now that we have all of the data in an easy-to-use dataframe, let’s dig into it. I’ll use seaborn and matplotlib to do some plotting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First, let’s take a look at the breakdown of right vs left footed passes, and to provide some more context, let’s break it down by side (i.e., right center back vs left center back).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Use seaborn&#39;s countplot to visualize counts of &#39;subcategory&#39; within each &#39;category&#39;</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">passing_data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">,</span>
+                   <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Left Center Back&#39;</span><span class="p">,</span><span class="s1">&#39;Right Center Back&#39;</span><span class="p">],</span><span class="n">hue_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Left Foot&#39;</span><span class="p">,</span><span class="s1">&#39;Right Foot&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">25000</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Player Position&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of Complete Passes&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Passing Breakdown&quot;</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span> <span class="c1"># adding the numbers to the plots</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>  <span class="c1"># Label text</span>
+                    <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()),</span>  <span class="c1"># Coordinates</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;baseline&#39;</span><span class="p">,</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>  <span class="c1"># Text offset</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+<span class="c1"># Show plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6cd2d398a971b1dc2f34a9e1776a054f8d5d398342de2462681cee2005fc3f93.png" src="_images/6cd2d398a971b1dc2f34a9e1776a054f8d5d398342de2462681cee2005fc3f93.png" />
+</div>
+</div>
+<p>Unsuprisingly, most passes were completed with the right foot since most players (and people in general) are right footed. Although the number of left footed passes increases in the left center back (and the number of right footed passes decreases). Now, let’s take a look at the proportion of passes that were deemed progressive.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># first, group the data based on position, to determine the proportion of progressive passes</span>
+<span class="n">grouped_pos</span> <span class="o">=</span> <span class="n">passing_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="s1">&#39;is_progressive&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">grouped_pos</span><span class="p">[</span><span class="s1">&#39;proportion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grouped_pos</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;position.name&#39;</span><span class="p">])[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># next, we can group the data based on position and foot used to make the pass</span>
+<span class="n">grouped_pos_foot</span> <span class="o">=</span> <span class="n">passing_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">,</span> <span class="s1">&#39;is_progressive&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">grouped_pos_foot</span><span class="p">[</span><span class="s1">&#39;proportion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grouped_pos_foot</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">])[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># there&#39;s only a few numbers in these tables, so I could just show the tables and be done with it, but I think figures </span>
+<span class="c1"># will look a bit nicer, so let&#39;s make them here</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>  <span class="c1"># create subplot with 1 row, 2 columns</span>
+
+<span class="c1"># First plot: % of progressive passes for right center back vs left center back</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">grouped_pos</span><span class="p">[</span><span class="n">grouped_pos</span><span class="p">[</span><span class="s1">&#39;is_progressive&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;proportion&#39;</span><span class="p">,</span> 
+            <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;mediumpurple&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Progressive Passing By Position&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;% progressive passes&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Position&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span> <span class="c1"># adding the numbers to the plots</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span>  <span class="c1"># Label text</span>
+                    <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()),</span>  <span class="c1"># Coordinates</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;baseline&#39;</span><span class="p">,</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>  <span class="c1"># Text offset</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+
+<span class="c1"># Second plot: % of progressive passes for right center back vs left center back, broken down by foot</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">grouped_pos_foot</span><span class="p">[</span><span class="n">grouped_pos_foot</span><span class="p">[</span><span class="s1">&#39;is_progressive&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;proportion&#39;</span><span class="p">,</span> 
+            <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">,</span><span class="n">hue_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Left Foot&#39;</span><span class="p">,</span><span class="s1">&#39;Right Foot&#39;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Progressive Passing By Position &amp; Foot&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;% progressive passes&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Position&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span> <span class="c1"># adding the numbers to the plots</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span>  <span class="c1"># Label text</span>
+                    <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()),</span>  <span class="c1"># Coordinates</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;baseline&#39;</span><span class="p">,</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>  <span class="c1"># Text offset</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Add some layout adjustments</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3759836c589b032fd9028d001a6b7e3770b6ef76b21f3b8d69cc69bbec363b5b.png" src="_images/3759836c589b032fd9028d001a6b7e3770b6ef76b21f3b8d69cc69bbec363b5b.png" />
+</div>
+</div>
+<p>Okay - let’s try to break this down.
+<br></p>
+<p>The left-hand plot tells us that the proportion of progressive passes is larger for the right center back compared to the left center back.
+<br></p>
+<p>Now, the right-hand plot breaks this down by position and foot. Firstly, we can see that for both the left and right center backs, the proportion of progressive passes is larger for the right foot. Again, this isn’t too suprising since 1) most players are right footed and 2) progressive passes are usually more difficult to complete, so players will prefer to make these passes with their preferred foot. However, we can see that for the right foot, the proportion of progressive passes slightly decreases from right center back to left center back. Alternatively, for the left foot, the opposite occurs.
+<br></p>
+<p>Okay, so this is interesting, but I’m not sure how much this really tells us given that most players are right foot dominant and we’ve cast a pretty wide net for defining what is a progressive pass. Next, let’s look at how much distance was actually gained in these progressive passes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Use seaborn&#39;s boxplot to look at average distance progressed, broken down by position and foot</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">passing_data</span><span class="p">[</span><span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;is_progressive&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;position.name&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;distance_progressed&#39;</span><span class="p">,</span> 
+                 <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">,</span><span class="n">hue_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Left Foot&#39;</span><span class="p">,</span><span class="s1">&#39;Right Foot&#39;</span><span class="p">],</span>
+                 <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Left Center Back&#39;</span><span class="p">,</span><span class="s1">&#39;Right Center Back&#39;</span><span class="p">],</span>
+                <span class="n">fliersize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">flierprops</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;o&quot;</span><span class="p">})</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">55</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Player Position&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Distance Progressed (yards)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Progressive Passing Breakdown&quot;</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/caf4915f8334c6ad18cb1a9d1f65e30a5646c346e0eb4c8a88de1db285dccbb2.png" src="_images/caf4915f8334c6ad18cb1a9d1f65e30a5646c346e0eb4c8a88de1db285dccbb2.png" />
+</div>
+</div>
+<p>Okay, here we have a boxplot that breaks down the distance progressed for passes from the center backs, broken down by foot.
+<br></p>
+<p>(Note about reading boxplots: the box indicates the range of data from the 25th to 75th percentile, with the line representing the median. The whiskers that extend from the boxes represent the range of the data, excluding outliers which are represented as dots).
+<br></p>
+<p>Focusing on the left center back, here we can see a very large difference between the distance progressed using the left foot compared to the right foot. This is very interesting to me; while the previous figure showed that a higher proportion of the right footed passes by a left center back were progressive, here we can see that the left foot progressive passes resulted in much more distance progressed.
+<br></p>
+<p>Since I was interested in specifically looked at the left vs right foot of the left center back, let’s also run a quick statistical test (setting p &lt; 0.05) to compare the distances progressed. I’m chosing to do a single t-test (one-sided Welch) to keep things short and simple here, but a 2-way ANOVA with post-hoc comparisons (adjusted for multiple comparisons) would provide a nice summary of whether position and foot influence pass progression, and what differences there are.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="c1"># group all of the right foot data from the left center back</span>
+<span class="n">lcb_rfoot</span> <span class="o">=</span> <span class="n">passing_data</span><span class="p">[(</span><span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;position.name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Left Center Back&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+                         <span class="p">(</span><span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Right Foot&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+                         <span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;is_progressive&#39;</span><span class="p">]][</span><span class="s1">&#39;distance_progressed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># group all of the left foot data from the left center back</span>
+<span class="n">lcb_lfoot</span> <span class="o">=</span> <span class="n">passing_data</span><span class="p">[(</span><span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;position.name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Left Center Back&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+                         <span class="p">(</span><span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;pass.body_part.name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Left Foot&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+                         <span class="n">passing_data</span><span class="p">[</span><span class="s1">&#39;is_progressive&#39;</span><span class="p">]][</span><span class="s1">&#39;distance_progressed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># run welch&#39;s t-test (since we have unequal variances), with the alternative hypothesis that the right footed passes</span>
+<span class="c1"># would be less progressive than the left footed passes</span>
+<span class="n">ttest_ind</span><span class="p">(</span><span class="n">lcb_rfoot</span><span class="p">,</span> <span class="n">lcb_lfoot</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">)</span>
+
+<span class="c1">#here are the results:</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TtestResult(statistic=-30.936900738410248, pvalue=1.6636662753119952e-188, df=3916.1949355938073)
+</pre></div>
+</div>
+</div>
+</div>
+<p>And as we can see, the p-value is &lt;&lt;&lt; 0.05, so we can reject the null hypothesis that there are no differences between the distances progressed of the right and left footed passes for the left center back.</p>
+</section>
+<section id="brief-summary">
+<h2>Brief Summary<a class="headerlink" href="#brief-summary" title="Link to this heading">#</a></h2>
+<p>In this short analysis, I have looked at the progressive passing of the left and right center backs, broken down by whether they used their right or left foot. Overall, there is a clear preference of players to use their right foot compared to their left, likely because most players are right foot dominant. This difference is smaller for the left center backs, however, likely because some left center backs are left foot dominant. This difference was also reflected in the proportion of passes that I deemed to be progressive, with a larger proportion of progressive passes with the right foot for both the left and right center backs. However, when I looked at the distance progressed, we see that left footed passes were much more progressive (in terms of distance) compared to right footed passes for the left center backs. This indicates that there is an advantage of left footed passes for left center backs, suggesting that left foot dominant players may provide an advantage in this position.</p>
+</section>
+<section id="a-note-on-some-limitations-future-directions">
+<h2>A note on some limitations &amp; future directions<a class="headerlink" href="#a-note-on-some-limitations-future-directions" title="Link to this heading">#</a></h2>
+<p>I’ve mentioned some limitations throughout this notebook, but here is a (non-exhaustive) list of other limitations and future directions that I could take this project:</p>
+<ol class="arabic simple">
+<li><p>The biggest limitation is the lack of information about players’ preferred foot. While I’ve broken down the information by foot used, having the information about each player would allow for more in-depth analysis about whether a left footed player is able to make more progressive passes on the left side, compared to a right footed player. Future work could involve using other databases to find the players’ preferred foot, and then joining that information to our existing dataframes. Although this poses some likely difficulties, as some player names will not exactly match between databases.</p></li>
+<li><p>I determined passing “progressiveness” based on whether the pass was even slightly forward. However, is a pass that gain 0.1 yards really progressive? Perhaps a stricter definition of progressive passing would change the results.</p></li>
+<li><p>I chose to only look at completed passes, however, there is likely lots of valuable insights to be found in looking at pass completion rates (i.e., how accurate the passing was).</p></li>
+<li><p>The purpose of this analyses was to look at how center backs progress the ball up the field (towards to opponent’s goal), but I chose not to filter out passes by location. This means that if a center back completed a pass while they were drastically out of position and in the opponent’s half (e.g., following a corner or on the other side of the field), this would be included in the data. However, most of the passes will have been completed in normal gameplay, so I don’t believe this will have had a major effect on the results.</p></li>
+<li><p>The formation used by the team will also have an influence on the positioning of the players. Specifically, when playing with 3 center backs, I believe that the advantage of having a left footed left center back will be greater, but I did not filter out passes based on the team’s formation.</p></li>
+</ol>
+<br>
+<p>That’s all for this project, hope you enjoyed and found it interesting!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome to Liam Foulger’s portfolio!</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-reading-warning-contains-discussion-of-soccer-specific-techniques">Optional Reading:  Warning! Contains discussion of soccer-specific techniques</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methodology">Methodology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-transform-and-load-the-data">Extract, transform, and load the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#brief-summary">Brief Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-some-limitations-future-directions">A note on some limitations &amp; future directions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Liam Foulger
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
